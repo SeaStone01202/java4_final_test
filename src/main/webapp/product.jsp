@@ -35,6 +35,11 @@
     <button class="btn btn-success" name="action" value="show">Show</button>
   </form>
 
+  <form action="${pageContext.request.contextPath}/product" method="post" class="form-control">
+    <label>Category ?</label>
+    <input type="text" name="categoryName">
+    <button class="btn btn-success" name="action" value="show2">Show</button>
+  </form>
 
   <hr>
 

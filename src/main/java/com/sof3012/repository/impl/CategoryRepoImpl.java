@@ -10,4 +10,8 @@ public class CategoryRepoImpl extends GenericRepositoryImpl<Category, String> im
         super(entityClass);
     }
 
+    public List<Category> findByName(String name) {
+        String sql = "SELECT e FROM Category e WHERE LOWER(e.name) LIKE LOWER(?1)";
+        return super.findMany(sql, name);
+    }
 }

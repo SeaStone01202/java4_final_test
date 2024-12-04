@@ -14,6 +14,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 @WebServlet("/product")
@@ -35,28 +36,50 @@ public class ProductController extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         String selectedCategory = req.getParameter("categorySelected");
+        String categoryName = req.getParameter("categoryName");
 
-        List<Product> productList;
-        if (selectedCategory.equals("all")) {
-            productList = productService.getAll();
-            req.setAttribute("message", "Đã chọn toàn bộ danh mục");
-        } else {
+        List<Product> productList = new ArrayList<>();
+
+        // Kiểm tra nếu người dùng chọn danh mục
+        if (selectedCategory != null && !selectedCategory.equals("all")) {
+            // Tìm theo danh mục đã chọn
             Category category = categoryService.getById(selectedCategory);
             if (category != null) {
                 productList = productService.getByCategoryId(selectedCategory);
                 req.setAttribute("message", "Danh mục được chọn: " + category.getName());
             } else {
-                productList = productService.getAll();
+                productList = productService.getAll(); // Nếu danh mục không tồn tại, hiển thị tất cả sản phẩm
                 req.setAttribute("message", "Danh mục không tồn tại, hiển thị toàn bộ sản phẩm!");
             }
+        } else if (categoryName != null && !categoryName.trim().isEmpty()) {
+            // Tìm theo tên danh mục nếu có nhập vào
+            List<Category> categories = categoryService.findByName(categoryName);
+            if (categories != null && !categories.isEmpty()) {
+                List<Product> categoryProducts = new ArrayList<>();
+                for (Category category : categories) {
+                    categoryProducts.addAll(productService.getByCategoryId(category.getId()));
+                }
+                productList = categoryProducts;
+                req.setAttribute("message", "Danh mục có tên chứa '" + categoryName + "' được tìm thấy.");
+            } else {
+                productList = productService.getAll();
+                req.setAttribute("message", "Không tìm thấy danh mục với tên: " + categoryName + ", hiển thị toàn bộ sản phẩm!");
+            }
+        } else {
+            // Nếu không chọn gì, hiển thị toàn bộ sản phẩm
+            productList = productService.getAll();
+            req.setAttribute("message", "Đã chọn toàn bộ danh mục");
         }
 
+        // Gửi danh sách sản phẩm và danh mục đến trang JSP
         req.setAttribute("productList", productList);
 
+        // Lấy tất cả danh mục để hiển thị trong dropdown
         List<Category> categoryList = categoryService.getAll();
         req.setAttribute("categoryList", categoryList);
 
         req.getRequestDispatcher("product.jsp").forward(req, resp);
     }
+
 
 }
