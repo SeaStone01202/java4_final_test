@@ -41,6 +41,16 @@
     <button class="btn btn-success" name="action" value="show2">Show</button>
   </form>
 
+  <form action="${pageContext.request.contextPath}/product" method="post" class="form-control">
+    <label>Category ?</label>
+    <br>
+    <input type="radio" name="categorySelected" value="all"> All
+    <c:forEach var="categoryName" items="${categoryList}">
+      <input type="radio" name="categorySelected" value="${categoryName.id}"> ${categoryName.name}
+    </c:forEach>
+    <button class="btn btn-warning" name="action" value="show">Show</button>
+  </form>
+
   <hr>
 
   <table class="table table-striped">
