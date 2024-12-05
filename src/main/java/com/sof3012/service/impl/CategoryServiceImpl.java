@@ -22,7 +22,7 @@ public class CategoryServiceImpl implements CategoryService {
 
     @Override
     public Category update(Category e) {
-        return null;
+        return categoryRepo.update(e);
     }
 
     @Override

@@ -38,8 +38,8 @@
             <hr>
 
             <button class="btn btn-primary" name="action" value="create">Create</button>
-
-                <button class="btn btn-danger" name="action" value="delete">Delete</button>
+            <button class="btn btn-dark" name="action" value="update">Update</button>
+            <button class="btn btn-danger" name="action" value="delete">Delete</button>
         </form>
 
 

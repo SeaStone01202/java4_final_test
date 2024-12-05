@@ -63,6 +63,9 @@ public class CategoryController extends HttpServlet {
             case "delete":
                 handleDeleteCategory(req, categoryId);
                 break;
+            case "update":
+                handleUpdateCategory(req, category);
+                break;
             default:
                 resp.sendRedirect(req.getContextPath() + "/category");
                 return;
@@ -78,6 +81,17 @@ public class CategoryController extends HttpServlet {
         } else {
             Category createdCategory = categoryService.create(category);
             req.setAttribute("message", createdCategory != null ? "Tạo thành công!" : "Tạo thất bại!");
+        }
+    }
+
+    private void handleUpdateCategory(HttpServletRequest req, Category category) {
+        Category categoryFined = categoryService.getById(category.getId());
+        if (categoryFined == null) {
+            req.setAttribute("message", "Không tìm thấy id");
+        } else {
+            categoryFined.setName(category.getName());
+            categoryService.update(categoryFined);
+            req.setAttribute("message", "Cập nhật thành công !");
         }
     }
 
